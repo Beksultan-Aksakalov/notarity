@@ -14,6 +14,8 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
+import { Accordion, AccordionDetails, AccordionSummary, MenuItem, Typography } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface TablePaginationActionsProps {
     count: number;
@@ -81,31 +83,35 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
     );
 }
 
-function createData(name: string, calories: number, fat: number) {
-    return { name, calories, fat };
+function createData(id: number, name: string, docs: Doc[]) {
+    return { id, name, docs };
+}
+
+interface Doc {
+    id: number;
+    name: string;
 }
 
 const rows = [
-    createData('Cupcake', 305, 3.7),
-    createData('Donut', 452, 25.0),
-    createData('Eclair', 262, 16.0),
-    createData('Frozen yoghurtFrozen yoghurtFrozen yoghurtFrozen yoghurtFrozen yoghurtFrozen yoghurtFrozen yoghurtFrozen yoghurt', 159, 6.0),
-    createData('Gingerbread', 356, 16.0),
-    createData('Honeycomb', 408, 3.2),
-    createData('Ice cream sandwich', 237, 9.0),
-    createData('Jelly Bean', 375, 0.0),
-    createData('KitKat', 518, 26.0),
-    createData('Lollipop', 392, 0.2),
-    createData('Marshmallow', 318, 0),
-    createData('Nougat', 360, 19.0),
-    createData('Oreo', 437, 18.0),
-].sort((a, b) => (a.calories < b.calories ? -1 : 1));
+    createData(1, 'Auto', [{ id: 1, name: "Auto1" }, { id: 2, name: "Auto2" }]),
+    createData(2, 'Donut', [{ id: 1, name: "Donut1" }, { id: 2, name: "Donut1" }]),
+    createData(3, 'Eclair', [{ id: 1, name: "Eclair1" }, { id: 2, name: "Eclair2" }]),
+    createData(4, 'Frozen yoghurt', [{ id: 1, name: "Frozen1" }, { id: 2, name: "Frozen2" }]),
+    createData(5, 'Gingerbread', [{ id: 1, name: "Gingerbread1" }, { id: 2, name: "Gingerbread2" }]),
+    createData(6, 'Honeycomb', [{ id: 1, name: "Honeycomb1" }, { id: 2, name: "Honeycomb2" }]),
+    createData(7, 'Ice cream sandwich', [{ id: 1, name: "Ice1" }, { id: 2, name: "Ice2" }]),
+    createData(8, 'Jelly Bean', [{ id: 1, name: "Jelly1" }, { id: 2, name: "Jelly2" }]),
+    createData(9, 'KitKat', [{ id: 1, name: "KitKat1" }, { id: 2, name: "KitKat2" }]),
+    createData(10, 'Lollipop', [{ id: 1, name: "Lollipop1" }, { id: 2, name: "Lollipop2" }]),
+    createData(11, 'Marshmallow', [{ id: 1, name: "Marshmallow1" }, { id: 2, name: "Marshmallow2" }]),
+    createData(12, 'Nougat', [{ id: 1, name: "Nougat1" }, { id: 2, name: "Nougat2" }]),
+    createData(13, 'Oreo', [{ id: 1, name: "Oreo1" }, { id: 2, name: "Oreo2" }]),
+]
 
 export default function CustomPaginationActionsTable() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-    // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -131,17 +137,24 @@ export default function CustomPaginationActionsTable() {
                         ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         : rows
                     ).map((row) => (
-                        <TableRow key={row.name}>
-                            <TableCell component="th" scope="row">
-                                {row.name}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
-                                {row.calories}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align="right">
-                                {row.fat}
-                            </TableCell>
-                        </TableRow>
+                        <Accordion>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header">
+                                <Typography>{row.name}</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                {row.docs.map((doc: Doc, index: number) => {
+                                    return (
+                                        <MenuItem key={index} value={doc.id}>
+                                            {doc.name}
+                                        </MenuItem>
+                                    );
+                                })}
+                            </AccordionDetails>
+                        </Accordion>
+
                     ))}
                     {emptyRows > 0 && (
                         <TableRow style={{ height: 53 * emptyRows }}>
