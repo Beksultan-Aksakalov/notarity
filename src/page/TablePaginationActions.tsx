@@ -9,13 +9,41 @@ import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import IconButton from '@mui/material/IconButton';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { Accordion, AccordionDetails, AccordionSummary, MenuItem, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Dialog from "@material-ui/core/Dialog";
+import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import MuiDialogContent from "@material-ui/core/DialogContent";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import {
+    makeStyles,
+    createStyles,
+    Theme,
+    withStyles,
+    WithStyles,
+} from "@material-ui/core/styles";
+import { Grid } from '@material-ui/core';
+import { Forms } from '../forms';
+
+const styles = (theme: Theme) =>
+    createStyles({
+        root: {
+            margin: 0,
+            padding: theme.spacing(2),
+        },
+        closeButton: {
+            position: "absolute",
+            right: theme.spacing(1),
+            top: theme.spacing(1),
+            color: theme.palette.grey[500],
+        },
+
+    });
 
 interface TablePaginationActionsProps {
     count: number;
@@ -83,34 +111,68 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
     );
 }
 
-function createData(id: number, name: string, docs: Doc[]) {
-    return { id, name, docs };
-}
-
 interface Doc {
-    id: number;
+    code: string;
     name: string;
 }
 
-const rows = [
-    createData(1, 'Auto', [{ id: 1, name: "Auto1" }, { id: 2, name: "Auto2" }]),
-    createData(2, 'Donut', [{ id: 1, name: "Donut1" }, { id: 2, name: "Donut1" }]),
-    createData(3, 'Eclair', [{ id: 1, name: "Eclair1" }, { id: 2, name: "Eclair2" }]),
-    createData(4, 'Frozen yoghurt', [{ id: 1, name: "Frozen1" }, { id: 2, name: "Frozen2" }]),
-    createData(5, 'Gingerbread', [{ id: 1, name: "Gingerbread1" }, { id: 2, name: "Gingerbread2" }]),
-    createData(6, 'Honeycomb', [{ id: 1, name: "Honeycomb1" }, { id: 2, name: "Honeycomb2" }]),
-    createData(7, 'Ice cream sandwich', [{ id: 1, name: "Ice1" }, { id: 2, name: "Ice2" }]),
-    createData(8, 'Jelly Bean', [{ id: 1, name: "Jelly1" }, { id: 2, name: "Jelly2" }]),
-    createData(9, 'KitKat', [{ id: 1, name: "KitKat1" }, { id: 2, name: "KitKat2" }]),
-    createData(10, 'Lollipop', [{ id: 1, name: "Lollipop1" }, { id: 2, name: "Lollipop2" }]),
-    createData(11, 'Marshmallow', [{ id: 1, name: "Marshmallow1" }, { id: 2, name: "Marshmallow2" }]),
-    createData(12, 'Nougat', [{ id: 1, name: "Nougat1" }, { id: 2, name: "Nougat2" }]),
-    createData(13, 'Oreo', [{ id: 1, name: "Oreo1" }, { id: 2, name: "Oreo2" }]),
+interface Row {
+    id: number;
+    name: string;
+    docs: Doc[]
+}
+
+const rows: Row[] = [
+    { id: 1, name: "Авто", docs: [{ code: "power_Of_attorney_auto", name: "Доверенность авто на продажу" }, { code: "power_Of_attorney_auto2", name: "Auto2" }] },
+    { id: 2, name: "Donut", docs: [{ code: "1", name: "Donut1" }, { code: "2", name: "Donut2" }] },
+    // { id: 3, name: 'Eclair', docs: [{ code: "1", name: "Eclair1" }, { code: "2", name: "Eclair2" }] },
+    // { id: 4, name: 'Frozen yoghurt', docs: [{ code: "1", name: "Frozen1" }, { code: "2", name: "Frozen2" }] },
+    // { id: 5, name: 'Gingerbread', docs: [{ code: "1", name: "Gingerbread1" }, { code: "2", name: "Gingerbread2" }] },
+    // { id: 6, name: 'Honeycomb', docs: [{ code: "1", name: "Honeycomb1" }, { code: "2", name: "Honeycomb2" }] },
+    // { id: 7, name: 'Ice cream sandwich', docs: [{ code: "1", name: "Ice1" }, { code: "2", name: "Ice2" }] },
+    // { id: 8, name: 'Jelly Bean', docs: [{ code: "1", name: "Jelly1" }, { code: "2", name: "Jelly2" }] },
+    // { id: 9, name: 'KitKat', docs: [{ code: "1", name: "KitKat1" }, { code: "2", name: "KitKat2" }] },
+    // { id: 10, name: 'Lollipop', docs: [{ code: "1", name: "Lollipop1" }, { code: "2", name: "Lollipop2" }] },
+    // { id: 11, name: 'Marshmallow', docs: [{ code: "1", name: "Marshmallow1" }, { code: "2", name: "Marshmallow2" }] },
+    // { id: 12, name: 'Nougat', docs: [{ code: "1", name: "Nougat1" }, { code: "2", name: "Nougat2" }] },
+    // { id: 13, name: 'Oreo', docs: [{ code: "1", name: "Oreo1" }, { code: "2", name: "Oreo2" }] }
 ]
+
+export interface DialogTitleProps extends WithStyles<typeof styles> {
+    id: string;
+    children: React.ReactNode;
+    onClose: () => void;
+}
+
+const DialogTitle = withStyles(styles)((props: DialogTitleProps) => {
+    const { children, classes, onClose, ...other } = props;
+    return (
+        <MuiDialogTitle disableTypography className={classes.root} {...other}>
+            <Typography variant="h6">{children}</Typography>
+            {onClose ? (
+                <IconButton
+                    aria-label="close"
+                    className={classes.closeButton}
+                    onClick={onClose}
+                >
+                    <CloseIcon />
+                </IconButton>
+            ) : null}
+        </MuiDialogTitle>
+    );
+});
+
+const DialogContent = withStyles((theme: Theme) => ({
+    root: {
+        padding: theme.spacing(2),
+    },
+}))(MuiDialogContent);
 
 export default function CustomPaginationActionsTable() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [open, setOpen] = React.useState(false);
+    const [doc, setDoc] = React.useState({} as Doc);
 
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -128,6 +190,15 @@ export default function CustomPaginationActionsTable() {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const SendItem = (doc: Doc) => {
+        setDoc(doc);
+        setOpen(true);
+    }
 
     return (
         <TableContainer component={Paper}>
@@ -147,14 +218,13 @@ export default function CustomPaginationActionsTable() {
                             <AccordionDetails>
                                 {row.docs.map((doc: Doc, index: number) => {
                                     return (
-                                        <MenuItem key={index} value={doc.id}>
+                                        <MenuItem key={index} value={doc.code} onClick={() => SendItem(doc)}>
                                             {doc.name}
                                         </MenuItem>
                                     );
                                 })}
                             </AccordionDetails>
                         </Accordion>
-
                     ))}
                     {emptyRows > 0 && (
                         <TableRow style={{ height: 53 * emptyRows }}>
@@ -183,6 +253,26 @@ export default function CustomPaginationActionsTable() {
                     </TableRow>
                 </TableFooter>
             </Table>
-        </TableContainer>
+            <Dialog
+                onClose={handleClose}
+                aria-labelledby="customized-dialog-title"
+                open={open}
+            >
+
+                <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+                    <Typography >
+                        {doc.name}
+                    </Typography>
+                </DialogTitle>
+                <DialogContent >
+
+                    <Forms code={doc.code} name={doc.name} />
+
+                </DialogContent>
+
+            </Dialog>
+
+        </TableContainer >
     );
 }
+
