@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const LabTabs = () => {
-
   const classes = useStyles({});
   const [value, setValue] = React.useState('1');
 

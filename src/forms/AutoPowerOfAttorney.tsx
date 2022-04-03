@@ -108,7 +108,7 @@ const AutoPowerOfAttorney = () => {
 
                         </Grid>
                         <Grid item lg={12} md={12} sm={12} xs={12} >
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
                                 <DesktopDatePicker
                                     label="Дата рождения"
                                     inputFormat="MM.dd.yyyy"
@@ -116,7 +116,7 @@ const AutoPowerOfAttorney = () => {
                                     onChange={(newValue: Date | null) => { setValue(newValue) }}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
-                            </LocalizationProvider >
+                            </LocalizationProvider > */}
                         </Grid>
                     </Grid>
                     :
