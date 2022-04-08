@@ -13,6 +13,7 @@ import {
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { TextareaAutosize } from '@mui/material';
 import { history } from '../../../core/helpers/history';
+import { isInaccessible } from '@testing-library/react';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -26,6 +27,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function AttorneyBase() {
     const classes = useStyles();
+
+    const [fio, setFio] = React.useState("");
+    const [iin, setIIN] = React.useState("");
 
     const [selectedDate, setSelectedDate] = React.useState<MaterialUiPickersDate | null>();
 
@@ -43,10 +47,19 @@ export default function AttorneyBase() {
                     </Typography>
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-                    <TextField fullWidth id="outlined-basic" label="ФИО" variant="outlined" />
+                    <TextField fullWidth id="outlined-basic" label="ФИО" variant="outlined"
+                        value={fio}
+                        inputProps={{ maxlength: 50 }}
+                        helperText={`${fio.length}/${50}`}
+                        onChange={(event) => setFio(event.target.value)}
+                    />
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-                    <TextField fullWidth id="outlined-basic" label="ИИН" variant="outlined" />
+                    <TextField fullWidth id="outlined-basic" label="ИИН" variant="outlined"
+                        value={iin}
+                        inputProps={{ maxlength: 12 }}
+                        helperText={`${iin.toString().length}/${12}`}
+                        onChange={(event: any) => setIIN(event.target.value)} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
                     <TextField fullWidth id="outlined-basic" label="Место рождения" variant="outlined" />
@@ -76,10 +89,19 @@ export default function AttorneyBase() {
                     </Typography>
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-                    <TextField fullWidth id="outlined-basic" label="ФИО" variant="outlined" />
+                    <TextField fullWidth id="outlined-basic" label="ФИО" variant="outlined"
+                        value={fio}
+                        inputProps={{ maxlength: 50 }}
+                        helperText={`${fio.length}/${50}`}
+                        onChange={(event) => setFio(event.target.value)}
+                    />
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-                    <TextField fullWidth id="outlined-basic" label="ИИН" variant="outlined" />
+                    <TextField fullWidth id="outlined-basic" label="ИИН" variant="outlined"
+                        value={iin}
+                        inputProps={{ maxlength: 12 }}
+                        helperText={`${iin.toString().length}/${12}`}
+                        onChange={(event: any) => setIIN(event.target.value)} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
                     <TextField fullWidth id="outlined-basic" label="Место рождения" variant="outlined" />

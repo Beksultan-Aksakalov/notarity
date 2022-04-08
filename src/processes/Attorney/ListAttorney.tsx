@@ -122,7 +122,6 @@ export default function ListAttorney(props: any) {
         setPage(0);
     };
 
-
     const SendItem = (row: Row, id: number) => {
         history.push(`${_match.path}/${row.code}`);
     }
