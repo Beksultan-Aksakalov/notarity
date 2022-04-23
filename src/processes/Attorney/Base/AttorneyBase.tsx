@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { Button, createStyles, makeStyles } from "@material-ui/core";
@@ -11,9 +11,12 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
-import { TextareaAutosize } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, TextareaAutosize } from '@mui/material';
 import { history } from '../../../core/helpers/history';
 import { isInaccessible } from '@testing-library/react';
+import { color } from '@mui/system';
+import { MinorPerson, typeAttorney } from '../../../models';
+import { Person } from '@mui/icons-material';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -22,47 +25,115 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         mTextField: {
             width: "100%"
+        },
+        minorContent: {
+            paddingBottom: "10px"
+        },
+        majorContent: {
+            paddingBottom: "10px"
+        },
+        textAreaContent: {
+            padding: "25px 0 25px 0"
+        },
+        autocomplete: {
+            paddingTop: "20px"
+        },
+        hr: {
+            width: "100%",
+            padding: "1px",
+            backgroundColor: "#4287f5"
         }
     }))
 
 export default function AttorneyBase() {
     const classes = useStyles();
 
-    const [fio, setFio] = React.useState("");
-    const [iin, setIIN] = React.useState("");
+    const [majorLastname, setMajorLastname] = useState("");
+    const [majorFirstname, setMajorFirstname] = useState("");
+    const [majorMiddlename, setMajorMiddlename] = useState("");
+    const [majorIinBin, setMajorIinBin] = useState("");
+    const [majorBirthDate, setMajorBirthDate] = useState<MaterialUiPickersDate | null>();
+    const [majorBirthPlace, setMajorBirthPlace] = useState("");
+    const [majorPlaceOfResidence, setMajorPlaceOfResidence] = useState("");
 
-    const [selectedDate, setSelectedDate] = React.useState<MaterialUiPickersDate | null>();
+    const [minorLastname, setMinorLastname] = useState("");
+    const [minorFirstname, setMinorFirstname] = useState("");
+    const [minorMiddlename, setMinorMiddlename] = useState("");
+    const [minorIinBin, setMinorIinBin] = useState("");
+    const [minorBirthDate, setMinorBirthDate] = useState<MaterialUiPickersDate | null>();
+    const [minorBirthPlace, setMinorBirthPlace] = useState("");
+    const [minorPlaceOfResidence, setMinorPlaceOfResidence] = useState("");
 
-    const handleDateChange = (date: MaterialUiPickersDate | null) => {
-        setSelectedDate(date);
+    const [profit, setProfit] = useState("");
+    const [docDate, setDocDate] = useState<MaterialUiPickersDate | null>();
+    const [minorPerson, setMinorPerson] = useState<MinorPerson>({} as MinorPerson);
+    const [minors, setMinors] = useState<MinorPerson[]>([
+        {
+            Lastname: minorLastname,
+            Firstname: minorFirstname,
+            Middlename: minorMiddlename,
+            IinBin: minorIinBin,
+            BirthDate: minorBirthDate,
+            BirthPlace: minorBirthPlace,
+            PlaceOfResidence: minorPlaceOfResidence
+        }
+    ]);
+
+    console.log("minors", minors.map((item, index) => item));
+
+    const majorHandleDateChange = (date: MaterialUiPickersDate | null) => {
+        setMajorBirthDate(date);
     };
+
+    const minorHandleDateChange = (date: MaterialUiPickersDate | null) => {
+        setMinorBirthDate(date);
+    };
+
+    const docDateHandleDateChange = (date: MaterialUiPickersDate | null) => {
+        setDocDate(date);
+    };
+
+    useEffect(() => { minors.push(minorPerson); }, [])
 
     return <Paper elevation={3} className={classes.root}>
         <Grid container
-            alignItems="center" spacing={4}>
-            <Grid container direction="column" spacing={2} item xs={12} sm={12} md={12} lg={6} xl={6}>
-                <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+            alignItems="center">
+            <Grid container direction="row" spacing={3} item xs={12} sm={12} md={12} lg={12} xl={12} className={classes.minorContent}>
+                <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                     <Typography variant="h6" component="div" gutterBottom>
                         Доверитель
                     </Typography>
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-                    <TextField fullWidth id="outlined-basic" label="ФИО" variant="outlined"
-                        value={fio}
+                <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
+                    <TextField fullWidth id="outlined-basic" label="Фамилия" variant="outlined"
+                        value={majorLastname}
                         inputProps={{ maxlength: 50 }}
-                        helperText={`${fio.length}/${50}`}
-                        onChange={(event) => setFio(event.target.value)}
+                        helperText={`${majorLastname.length}/${50}`}
+                        onChange={(event) => setMajorLastname(event.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
+                    <TextField fullWidth id="outlined-basic" label="Имя" variant="outlined"
+                        value={majorFirstname}
+                        inputProps={{ maxlength: 50 }}
+                        helperText={`${majorFirstname.length}/${50}`}
+                        onChange={(event) => setMajorFirstname(event.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
+                    <TextField fullWidth id="outlined-basic" label="Отчество" variant="outlined"
+                        value={majorMiddlename}
+                        inputProps={{ maxlength: 50 }}
+                        helperText={`${majorMiddlename.length}/${50}`}
+                        onChange={(event) => setMajorMiddlename(event.target.value)}
                     />
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-                    <TextField fullWidth id="outlined-basic" label="ИИН" variant="outlined"
-                        value={iin}
+                    <TextField fullWidth id="outlined-basic" label="ИИН/БИН" variant="outlined"
+                        value={majorIinBin}
                         inputProps={{ maxlength: 12 }}
-                        helperText={`${iin.toString().length}/${12}`}
-                        onChange={(event: any) => setIIN(event.target.value)} />
-                </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-                    <TextField fullWidth id="outlined-basic" label="Место рождения" variant="outlined" />
+                        helperText={`${majorIinBin.toString().length}/${12}`}
+                        onChange={(event: any) => setMajorIinBin(event.target.value)} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -73,62 +144,130 @@ export default function AttorneyBase() {
                             margin="normal"
                             id="date-picker-inline"
                             label="Дата рождения"
-                            value={selectedDate}
-                            onChange={handleDateChange}
+                            value={majorBirthDate}
+                            onChange={majorHandleDateChange}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
                             }}
                         />
                     </MuiPickersUtilsProvider >
                 </Grid>
-            </Grid>
-            <Grid container direction="column" spacing={2} item xs={12} sm={12} md={12} lg={6} xl={6}>
                 <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-                    <Typography variant="h6" component="div" gutterBottom>
-                        Доверенный
-                    </Typography>
+                    <TextField fullWidth id="outlined-basic" label="Место рождения" variant="outlined"
+                        value={majorBirthPlace} onChange={(event: any) => setMajorBirthPlace(event.target.value)} />
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-                    <TextField fullWidth id="outlined-basic" label="ФИО" variant="outlined"
-                        value={fio}
-                        inputProps={{ maxlength: 50 }}
-                        helperText={`${fio.length}/${50}`}
-                        onChange={(event) => setFio(event.target.value)}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-                    <TextField fullWidth id="outlined-basic" label="ИИН" variant="outlined"
-                        value={iin}
-                        inputProps={{ maxlength: 12 }}
-                        helperText={`${iin.toString().length}/${12}`}
-                        onChange={(event: any) => setIIN(event.target.value)} />
-                </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-                    <TextField fullWidth id="outlined-basic" label="Место рождения" variant="outlined" />
-                </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                            disableToolbar
-                            variant="inline"
-                            format="MM/dd/yyyy"
-                            margin="normal"
-                            id="date-picker-inline"
-                            label="Дата рождения"
-                            value={selectedDate}
-                            onChange={handleDateChange}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change date',
-                            }}
-                        />
-                    </MuiPickersUtilsProvider >
+                    <TextField fullWidth id="outlined-basic" label="Место проживания" variant="outlined"
+                        value={majorPlaceOfResidence} onChange={(event: any) => setMajorPlaceOfResidence(event.target.value)} />
                 </Grid>
             </Grid>
-            <Grid container item xs={12} sm={12} md={12} lg={12} xl={12}>
+
+            <hr className={classes.hr} />
+
+            <Grid container direction="row" spacing={3} item xs={12} sm={12} md={12} lg={12} xl={12} className={classes.majorContent}>
+                {minors.map((item) => (
+                    <React.Fragment>
+                        <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                            <Typography variant="h6" component="div" gutterBottom>
+                                Доверенный
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
+                            <TextField fullWidth id="outlined-basic" label="Фамилия" variant="outlined"
+                                value={item.Lastname}
+                                inputProps={{ maxlength: 50 }}
+                                helperText={`${item.Lastname.length}/${50}`}
+                                onChange={(event) => setMinorLastname(event.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
+                            <TextField fullWidth id="outlined-basic" label="Имя" variant="outlined"
+                                value={item.Firstname}
+                                inputProps={{ maxlength: 50 }}
+                                helperText={`${item.Firstname.length}/${50}`}
+                                onChange={(event) => setMinorFirstname(event.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12} lg={4} xl={4}>
+                            <TextField fullWidth id="outlined-basic" label="Отчество" variant="outlined"
+                                value={item.Middlename}
+                                inputProps={{ maxlength: 50 }}
+                                helperText={`${item.Middlename.length}/${50}`}
+                                onChange={(event) => setMinorMiddlename(event.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+                            <TextField fullWidth id="outlined-basic" label="ИИН/БИН" variant="outlined"
+                                value={item.IinBin}
+                                inputProps={{ maxlength: 12 }}
+                                helperText={`${item.IinBin.toString().length}/${12}`}
+                                onChange={(event: any) => setMinorIinBin(event.target.value)} />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="MM/dd/yyyy"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    label="Дата рождения"
+                                    value={item.BirthDate}
+                                    onChange={minorHandleDateChange}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                            </MuiPickersUtilsProvider >
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+                            <TextField fullWidth id="outlined-basic" label="Место рождения" variant="outlined"
+                                value={item.BirthPlace} onChange={(value: any) => setMinorBirthPlace(value.target.value)} />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+                            <TextField fullWidth id="outlined-basic" label="Место проживания" variant="outlined"
+                                value={item.PlaceOfResidence} onChange={(value: any) => setMinorPlaceOfResidence(value.target.value)} />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+                            <Button
+                                variant="outlined"
+                                style={{ textTransform: "none" }}
+                                onClick={() => {
+                                    const person: MinorPerson = {
+                                        ...new MinorPerson()
+                                    };
+                                    setMinorPerson(person);
+                                }}
+                            >
+                                + Добавить еще
+                            </Button>
+                        </Grid>
+                    </React.Fragment>
+                ))}
+
+            </Grid>
+
+            <hr className={classes.hr} />
+
+            <Grid item xs={12} sm={12} md={12} lg={12} xl={12} className={classes.autocomplete}>
+                <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={typeAttorney}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => <TextField {...params} label="Интерес" />}
+                    onChange={(event, value) => setProfit(value?.text || "")}
+                />
+            </Grid>
+            <Grid container item xs={12} sm={12} md={12} lg={12} xl={12} className={classes.textAreaContent}>
                 <TextareaAutosize
                     aria-label="empty textarea"
                     placeholder="Empty"
+                    value={profit}
                     style={{ width: "100%", height: "200px" }}
+                    onChange={(e: any) => {
+                        setProfit(e.target.value);
+                    }}
                 />
             </Grid>
             <Grid item xs={12} sm={12} md={12} lg={3} xl={3}>
@@ -140,8 +279,8 @@ export default function AttorneyBase() {
                         margin="normal"
                         id="date-picker-inline"
                         label="Дата заключения сделки"
-                        value={selectedDate}
-                        onChange={handleDateChange}
+                        value={docDate}
+                        onChange={docDateHandleDateChange}
                         KeyboardButtonProps={{
                             'aria-label': 'change date',
                         }}
@@ -153,13 +292,7 @@ export default function AttorneyBase() {
                     Печатать
                 </Button>
             </Grid>
-            <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-                <Button variant="contained" color="secondary" onClick={() => {
-                    history.push("/attorneys")
-                }}>
-                    Назад
-                </Button>
-            </Grid>
+
         </Grid>
     </Paper >
 }

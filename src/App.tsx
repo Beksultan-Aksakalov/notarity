@@ -9,17 +9,15 @@ import MiniDrawer from './layouts/MiniDrawer';
 function App() {
 
   return (
-    <MiniDrawer />
-    // <Router history={history}>
-    //   <Switch>
-    //     <Route path="/login" component={() => <div>Login</div>} />
-    //     <MainLayout>
-    //       <Route path="/" exact component={LabTabs} />
-    //       <Route exact path="/attorneys" component={ListAttorney} />
-    //       <Route path="/attorneys/base" component={AttorneyBase} />
-    //     </MainLayout>
-    //   </Switch>
-    // </Router>
+    <Router history={history}>
+      <Switch>
+        <MiniDrawer>
+          <Route path="/" exact component={LabTabs} />
+          {/* <Route exact path="/attorneys" component={ListAttorney} /> */}
+          <Route path="/attorneys" component={AttorneyBase} />
+        </MiniDrawer>
+      </Switch>
+    </Router>
   );
 }
 
