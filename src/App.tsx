@@ -1,10 +1,8 @@
 import React from 'react';
 import { Router, Switch, Route } from "react-router-dom";
-import { history } from './core/helpers/history';
-import { LabTabs } from './pages';
-import ListAttorney from './processes/Attorney/ListAttorney';
-import AttorneyBase from './processes/Attorney/Base/AttorneyBase';
+import { history } from './core';
 import MiniDrawer from './layouts/MiniDrawer';
+import { Home, Attorney } from './processes';
 
 function App() {
 
@@ -12,9 +10,8 @@ function App() {
     <Router history={history}>
       <Switch>
         <MiniDrawer>
-          <Route path="/" exact component={LabTabs} />
-          {/* <Route exact path="/attorneys" component={ListAttorney} /> */}
-          <Route path="/attorneys" component={AttorneyBase} />
+          <Route path="/" exact component={Home} />
+          <Route path="/attorney" component={Attorney} />
         </MiniDrawer>
       </Switch>
     </Router>

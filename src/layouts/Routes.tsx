@@ -1,17 +1,16 @@
 import React from 'react';
-import { LabTabs } from '../pages';
-import ListAttorney from '../processes/Attorney/ListAttorney';
+import { Attorney, Home } from '../processes';
 
 const Routes = [
     {
         path: '/',
         sidebarName: 'Home',
-        component: LabTabs
+        component: Home
     },
     {
-        path: '/attorneys',
+        path: '/attorney',
         sidebarName: 'Доверенности',
-        component: ListAttorney
+        component: Attorney
     }
 ];
 
