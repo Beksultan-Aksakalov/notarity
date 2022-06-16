@@ -2,13 +2,14 @@ import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date";
 
 // Доверенный
 export class MinorPerson {
-    Lastname: string = ""; // фамилия
-    Firstname: string = ""; // имя
-    Middlename: string = ""; // отчество
-    IinBin: string = ""; // иин бин
-    BirthDate: MaterialUiPickersDate | undefined; // дата рождения
-    BirthPlace: string = ""; // место рождения
-    PlaceOfResidence: string = ""; // место проживания
+    id: number = 0;
+    lastname: string = ""; // фамилия
+    firstname: string = ""; // имя
+    middlename: string = ""; // отчество
+    iinBin: string = ""; // иин бин
+    birthDate: Date = new Date(); // дата рождения
+    birthPlace: string = ""; // место рождения
+    placeOfResidence: string = ""; // место проживания
 }
 
 export const typeAttorney = [
